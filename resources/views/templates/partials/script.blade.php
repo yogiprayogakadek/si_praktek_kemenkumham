@@ -1,0 +1,7 @@
+<script src="{{asset('assets/js/common-bundle-script.js')}}"></script>
+<script src="{{asset('assets/js/script.js')}}"></script>
+<script src="{{asset('assets/js/sidebar.large.script.js')}}"></script>
+<script src="{{asset('assets/js/customizer.script.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.2.1/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+@stack('script')
