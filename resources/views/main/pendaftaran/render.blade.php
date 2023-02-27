@@ -147,11 +147,13 @@
                     </div>
 
                     <div class="form-group surat-group row">
-                        <label for="surat" class="ul-form__label ul-form--margin col-lg-1   col-form-label ">
+                        <label class="ul-form__label ul-form--margin col-lg-1   col-form-label ">
                             Surat
+                            <br> <span class="label-needed pointer"></span>
                         </label>
                         <div class="col-lg-11 mt-2">
                             <input type="file" class="form-control surat" id="surat" name="surat">
+                            <span class="note-surat text-muted text-small"></span>
                             <div class="invalid-feedback error-surat"></div>
                         </div>
                     </div>
@@ -205,7 +207,7 @@
         var uuid = $(this).data('uuid');
 
         $('#modalDetail').modal('show')
-        
+        $('.label-needed').empty();
         $.get("/pendaftaran/edit/"+uuid, function (data) {
             $('#modalDetail .modal-title').text('Data - ' + data.mahasiswa.nama)
             $('#nama').val(data.mahasiswa.nama).prop('disabled', true)
@@ -225,12 +227,20 @@
                 $('.keterangan-group').prop('hidden', false);
                 $('#keterangan').val(data.keterangan).prop('disabled', true)
                 $('.surat-group').prop('hidden', true);
+                $('.note-surat').empty()
             } else if(data.is_approved == 'Menunggu Konfirmasi') {
                 $('.keterangan-group').prop('hidden', true);
                 $('.surat-group').prop('hidden', true);
+                $('.note-surat').empty()
             } else {
+                $('.surat').prop('disabled', true);
                 $('.keterangan-group').prop('hidden', true);
                 $('.surat-group').prop('hidden', false);
+
+                let link = '<a href="'+assets(data.surat_penerimaan)+'" target=_blank>lihat</a>';
+                $('.label-needed').empty().append(link)
+
+                $('.note-surat').text('*kosongkan bila tidak ingin mengganti surat')
             }
         });
     });
@@ -242,6 +252,7 @@
 
     $('body').on('click', '.btn-status', function() {
         $('.status-save').remove();
+        
         var status = $(this).data('status');
         var uuid = $(this).data('uuid');
         
@@ -257,6 +268,8 @@
         $('.status-group').append(btn_save);
 
         $('#keterangan').prop('disabled', false)
+
+        $('.surat').prop('disabled', false);
     });
 
     $('body').on('click', '.btn-status-cancle', function() {
@@ -277,6 +290,7 @@
         } else {
             $('.keterangan-group').prop('hidden', true);
             $('.surat-group').prop('hidden', false);
+            $('.surat').prop('disabled', true);
         }
 
         $('.status-dropdown').removeClass('col-lg-7').addClass('col-lg-9')
@@ -301,6 +315,7 @@
         } else {
             $('.keterangan-group').prop('hidden', true);
             $('.surat-group').prop('hidden', false);
+            $('.surat').prop('disabled', false);
         }
     })
 
@@ -368,9 +383,15 @@
             // $('.status-save').remove();
             updateData(data)
         } else {
-            if(surat == '') {
-                $('.surat').addClass('is-invalid');
-                $('.error-surat').text('File surat harus diisi')
+            if($('body').find('.label-needed').length == 0) {
+                if(surat == '') {
+                    $('.surat').addClass('is-invalid');
+                    $('.error-surat').text('File surat harus diisi')
+                } else {
+                    $('.surat').removeClass('is-invalid');
+                    $('.error-surat').text('')
+                    updateData(data)
+                }
             } else {
                 $('.surat').removeClass('is-invalid');
                 $('.error-surat').text('')

@@ -43,8 +43,14 @@ class PendaftaranController extends Controller
                 'keterangan' => $request->keterangan,
             ];
 
+            if($request->status != 'Disetujui') {
+                $data['surat_penerimaan'] = null;
+            }
+
             if($request->hasFile('surat')) {
-                unlink($pendaftaran->surat_penerimaan);
+                if($pendaftaran->surat_penerimaan != null) {
+                    unlink($pendaftaran->surat_penerimaan);
+                }
                 $filenamewithextension = $request->file('surat')->getClientOriginalName();
 
                 //get file extension
