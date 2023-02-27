@@ -13,7 +13,44 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'Main\DashboardController@index');
+Route::namespace('Main')->group(function() {
+    Route::name('signup.')
+        ->controller('SignupController')
+        ->middleware('guest')
+        ->group(function() {
+            Route::get('/signup', 'index')->name('index');
+            Route::post('/signup', 'signup')->name('process');
+        });
+    
+    Route::name('dashboard.')
+        ->controller('DashboardController')
+        ->middleware('auth')
+        ->group(function() {
+            Route::get('/', 'index');
+        });
+});
+
+Route::namespace('Main')->middleware('auth')->group(function() {
+    Route::controller('PendaftaranController')
+        ->prefix('/pendaftaran')
+        ->name('pendaftaran.')
+        ->group(function() {
+            Route::get('/', 'index')->name('index');
+            Route::get('/render', 'render')->name('render');
+            Route::get('/edit/{uuid}', 'edit')->name('edit');
+            Route::post('/update', 'update')->name('update');
+    });
+
+    // Route::controller('Pengumuman')
+    //     ->name('pengumuman.')
+    //     ->group(function() {
+    //         Route::get('/', 'index')->name('index');
+    //         Route::get('/create', 'create')->name('create');
+    //         Route::get('/edit/{uuid}', 'edit')->name('edit');
+    //         Route::get('/update', 'update')->name('update');
+    //         Route::get('/validate', 'validate')->name('validate');
+    // });
+});
 
 Auth::routes();
 

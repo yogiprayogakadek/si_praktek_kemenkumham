@@ -29,8 +29,8 @@
                             <h4>KEMENKUMHAM | Pengajuan Kerja Praktek</h4>
                         </div>
                     </div>
-                    <h1 class="auth-title mt-5">Log in.</h1>
-                    <p class="auth-subtitle mb-5">
+                    <h1 class="auth-title mt-3">Log in.</h1>
+                    <p class="auth-subtitle mb-3">
                         Log in dengan identitas anda
                     </p>
 
@@ -52,9 +52,9 @@
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
+                            <a href="{{route('signup.index')}}"><p class="text-end mt-1">Belum punya akun? Daftar</p></a>
                         </div>
-                        
-                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5" type="submit">
+                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-1" type="submit">
                             Log in
                         </button>
                     </form>
