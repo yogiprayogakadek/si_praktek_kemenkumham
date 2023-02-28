@@ -157,6 +157,16 @@
                             <div class="invalid-feedback error-surat"></div>
                         </div>
                     </div>
+
+                    <div class="form-group divisi-group row">
+                        <label class="ul-form__label ul-form--margin col-lg-1   col-form-label ">
+                            Divisi
+                        </label>
+                        <div class="col-lg-11 mt-2">
+                            <select name="divisi" id="divisi" class="form-control divisi"></select>
+                            <div class="invalid-feedback error-divisi"></div>
+                        </div>
+                    </div>
                 </form>
             </div>
             {{-- <div class="modal-footer">
@@ -209,35 +219,47 @@
         $('#modalDetail').modal('show')
         $('.label-needed').empty();
         $.get("/pendaftaran/edit/"+uuid, function (data) {
-            $('#modalDetail .modal-title').text('Data - ' + data.mahasiswa.nama)
-            $('#nama').val(data.mahasiswa.nama).prop('disabled', true)
-            $('#tanggal_pendaftaran').val(data.tanggal_pendaftaran).prop('disabled', true)
-            $('#asal_sekolah').val(data.mahasiswa.asal_sekolah).prop('disabled', true)
-            $('#lama_magang').val(data.masa_magang).prop('disabled', true)
-            $('#dokumen').val(data.dokumen.split('/')[3]).prop('disabled', true)
-            $('.btn-dokumen').attr('data-file', data.dokumen)
-            
-            
-            $('#status').val(data.is_approved).prop('disabled', true)
-            $('#status').attr('data-status', data.is_approved);
-            $('.btn-status').attr('data-status', data.is_approved);
-            $('.btn-status').attr('data-uuid', data.uuid);
+            // console.log(JSON.parse(data.divisi))
 
-            if(data.is_approved == 'Ditolak') {
+            $('#modalDetail .modal-title').text('Data - ' + data.pendaftaran.mahasiswa.nama)
+            $('#nama').val(data.pendaftaran.mahasiswa.nama).prop('disabled', true)
+            $('#tanggal_pendaftaran').val(data.pendaftaran.tanggal_pendaftaran).prop('disabled', true)
+            $('#asal_sekolah').val(data.pendaftaran.mahasiswa.asal_sekolah).prop('disabled', true)
+            $('#lama_magang').val(data.pendaftaran.masa_magang).prop('disabled', true)
+            $('#dokumen').val(data.pendaftaran.dokumen.split('/')[3]).prop('disabled', true)
+            $('.btn-dokumen').attr('data-file', data.pendaftaran.dokumen)
+            
+            $('#status').val(data.pendaftaran.is_approved).prop('disabled', true)
+            $('#status').attr('data-status', data.pendaftaran.is_approved);
+            $('.btn-status').attr('data-status', data.pendaftaran.is_approved);
+            $('.btn-status').attr('data-uuid', data.pendaftaran.uuid);
+
+
+            // append divisi
+            $('#divisi').empty();
+            $.each(data.divisi, function (index, value) { 
+                let divisi_option = '<option value='+value.id+'>'+value.nama_divisi+'</option>';
+                $('#divisi').append(divisi_option);
+            });
+
+            if(data.pendaftaran.is_approved == 'Ditolak') {
                 $('.keterangan-group').prop('hidden', false);
-                $('#keterangan').val(data.keterangan).prop('disabled', true)
+                $('#keterangan').val(data.pendaftaran.keterangan).prop('disabled', true)
                 $('.surat-group').prop('hidden', true);
                 $('.note-surat').empty()
-            } else if(data.is_approved == 'Menunggu Konfirmasi') {
+                $('.divisi-group').prop('hidden', true);
+            } else if(data.pendaftaran.is_approved == 'Menunggu Konfirmasi') {
                 $('.keterangan-group').prop('hidden', true);
                 $('.surat-group').prop('hidden', true);
                 $('.note-surat').empty()
+                $('.divisi-group').prop('hidden', true);
             } else {
                 $('.surat').prop('disabled', true);
                 $('.keterangan-group').prop('hidden', true);
                 $('.surat-group').prop('hidden', false);
+                $('.divisi-group').prop('hidden', false);
 
-                let link = '<a href="'+assets(data.surat_penerimaan)+'" target=_blank>lihat</a>';
+                let link = '<a href="'+assets(data.pendaftaran.surat_penerimaan)+'" target=_blank>lihat</a>';
                 $('.label-needed').empty().append(link)
 
                 $('.note-surat').text('*kosongkan bila tidak ingin mengganti surat')
@@ -284,13 +306,16 @@
         if(status == 'Ditolak') {
             $('.keterangan-group').prop('hidden', false);
             $('.surat-group').prop('hidden', true);
+            $('.divisi-group').prop('hidden', true);
         } else if(status == 'Menunggu Konfirmasi') {
             $('.surat-group').prop('hidden', true);
             $('.keterangan-group').prop('hidden', true);
+            $('.divisi-group').prop('hidden', true);
         } else {
             $('.keterangan-group').prop('hidden', true);
             $('.surat-group').prop('hidden', false);
             $('.surat').prop('disabled', true);
+            $('.divisi-group').prop('hidden', false);
         }
 
         $('.status-dropdown').removeClass('col-lg-7').addClass('col-lg-9')
@@ -309,13 +334,16 @@
             $('.keterangan').removeClass('is-invalid');
             $('.surat-group').prop('hidden', true);
             $('.error-keterangan').text('')
+            $('.divisi-group').prop('hidden', true);
         } else if(status == 'Menunggu Konfirmasi') {
             $('.keterangan-group').prop('hidden', true);
             $('.surat-group').prop('hidden', true);
+            $('.divisi-group').prop('hidden', true);
         } else {
             $('.keterangan-group').prop('hidden', true);
             $('.surat-group').prop('hidden', false);
             $('.surat').prop('disabled', false);
+            $('.divisi-group').prop('hidden', false);
         }
     })
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Models\Divisi;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 
@@ -27,11 +28,16 @@ class PendaftaranController extends Controller
     public function edit($uuid) 
     {
         $pendaftaran = Pendaftaran::where('uuid',$uuid)->with('mahasiswa')->first();
-        // $view = [
-        //     'data' => view('main.pendaftaran.edit', compact('pendaftaran'))->render()
-        // ];
+        // $divisi = Divisi::where('status', true)->pluck('nama_divisi', 'id')->prepend('Pilih divisi penempatan...', '');
 
-        return response()->json($pendaftaran);
+        $divisi = Divisi::all(['id', 'nama_divisi'])->prepend(['id' => '', 'nama_divisi' => 'Pilih divisi penempatan...'])->toArray();
+        array_unshift($divisi, $divisi[0]);
+        unset($divisi[1]);
+
+        return response()->json([
+            'pendaftaran' => $pendaftaran,
+            'divisi' => $divisi,
+        ]);
     }
 
     public function update(Request $request)
@@ -45,6 +51,9 @@ class PendaftaranController extends Controller
 
             if($request->status != 'Disetujui') {
                 $data['surat_penerimaan'] = null;
+                $data['divisi_id'] = null;
+            } else {
+                $data['divisi_id'] = $request->divisi;
             }
 
             if($request->hasFile('surat')) {

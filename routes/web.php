@@ -22,7 +22,7 @@ Route::namespace('Main')->group(function() {
             Route::post('/signup', 'signup')->name('process');
         });
     
-    Route::name('dashboard.')
+    Route::name('dashboard')
         ->controller('DashboardController')
         ->middleware('auth')
         ->group(function() {
@@ -41,15 +41,18 @@ Route::namespace('Main')->middleware('auth')->group(function() {
             Route::post('/update', 'update')->name('update');
     });
 
-    // Route::controller('Pengumuman')
-    //     ->name('pengumuman.')
-    //     ->group(function() {
-    //         Route::get('/', 'index')->name('index');
-    //         Route::get('/create', 'create')->name('create');
-    //         Route::get('/edit/{uuid}', 'edit')->name('edit');
-    //         Route::get('/update', 'update')->name('update');
-    //         Route::get('/validate', 'validate')->name('validate');
-    // });
+    Route::controller('DivisiController')
+        ->prefix('/divisi')
+        ->name('divisi.')
+        ->group(function() {
+            Route::get('', 'index')->name('index');
+            Route::get('/render', 'render')->name('render');
+            Route::get('/create', 'create')->name('create');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::post('/store', 'store')->name('store');
+            Route::post('/update', 'update')->name('update');
+            Route::get('/validate/{uuid}', 'validateData')->name('validate');
+    });
 });
 
 Auth::routes();
