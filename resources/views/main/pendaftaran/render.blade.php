@@ -35,7 +35,7 @@
                         <td>{{$pendaftaran->mahasiswa->nama}}</td>
                         <td>{{date_format(date_create($pendaftaran->tanggal_pendaftaran), 'd-m-Y')}}</td>
                         <td>{{$pendaftaran->mahasiswa->asal_sekolah}}</td>
-                        <td>{{$pendaftaran->masa_magang}}</td>
+                        <td>{{$pendaftaran->masa_magang}} ({{diffDate($pendaftaran->masa_magang)}})</td>
                         <td>{{$pendaftaran->is_approved}}</td>
                         {{-- <td>{{$pendaftaran->kategori}}</td> --}}
                         @can('Admin')
@@ -212,6 +212,33 @@
         });
     }).draw();
 
+    function updateData(data) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "POST",
+            url: "/pendaftaran/update",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (response) {
+                if(response.status != 'info') {
+                    $('#modalDetail').modal('hide')
+                    getData();
+                }
+                Swal.fire(
+                    response.title,
+                    response.message,
+                    response.status
+                );
+            }
+        });
+    }
+
 
     $('body').on('click', '.btn-edit', function() {
         var uuid = $(this).data('uuid');
@@ -258,6 +285,10 @@
                 $('.keterangan-group').prop('hidden', true);
                 $('.surat-group').prop('hidden', false);
                 $('.divisi-group').prop('hidden', false);
+                $('#divisi').prop('disabled', true)
+                $('#divisi').val(data.pendaftaran.divisi_id)
+
+                $('.btn-status').attr('data-divisi', data.pendaftaran.divisi_id);
 
                 let link = '<a href="'+assets(data.pendaftaran.surat_penerimaan)+'" target=_blank>lihat</a>';
                 $('.label-needed').empty().append(link)
@@ -292,6 +323,7 @@
         $('#keterangan').prop('disabled', false)
 
         $('.surat').prop('disabled', false);
+        $('#divisi').prop('disabled', false)
     });
 
     $('body').on('click', '.btn-status-cancle', function() {
@@ -316,6 +348,9 @@
             $('.surat-group').prop('hidden', false);
             $('.surat').prop('disabled', true);
             $('.divisi-group').prop('hidden', false);
+            $('#divisi').prop('disabled', true)
+
+            $('#divisi').val($(this).data('divisi'))
         }
 
         $('.status-dropdown').removeClass('col-lg-7').addClass('col-lg-9')
@@ -346,46 +381,6 @@
             $('.divisi-group').prop('hidden', false);
         }
     })
-
-    function updateData(data) {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: "POST",
-            url: "/pendaftaran/update",
-            data: data,
-            processData: false,
-            contentType: false,
-            cache: false,
-            // beforeSend: function () {
-            //     $('.btn-status-save').attr('disable', 'disabled')
-            //     $('.btn-status-save').html('<i class="fa fa-spin fa-spinner"></i>')
-            // },
-            // complete: function () {
-            //     $('.btn-status-save').removeAttr('disable')
-            //     $('.btn-status-save').html('Simpan')
-            // },
-            success: function (response) {
-                Swal.fire(
-                    response.title,
-                    response.message,
-                    response.status
-                );
-                $('#modalDetail').modal('hide')
-                getData();
-            },
-            // error: function (response) {
-            //     Swal.fire(
-            //         response.title,
-            //         response.message,
-            //         response.status
-            //     );
-            // }
-        });
-    }
 
     // save update
     $('body').on('click', '.btn-status-save', function() {

@@ -16,4 +16,9 @@ class Pendaftaran extends Model
     {
         return $this->hasOne(Mahasiswa::class, 'id', 'mahasiswa_id');
     }
+
+    public function divisi() 
+    {
+        return $this->hasOne(Divisi::class, 'id', 'divisi_id');
+    }
 }

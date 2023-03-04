@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\isAdmin;
 use App\Models\Divisi;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
@@ -43,17 +44,31 @@ class PendaftaranController extends Controller
     public function update(Request $request)
     {
         try {
+            $cekDivisi = Divisi::find($request->divisi);
             $pendaftaran = Pendaftaran::where($request->uuid)->first();
             $data = [
                 'is_approved' => $request->status,
                 'keterangan' => $request->keterangan,
             ];
 
+            if($pendaftaran->is_approved == 'Disetujui' && $pendaftaran->is_approved != $request->status) {
+                $cekDivisi->increment('kuota');
+            }
+
             if($request->status != 'Disetujui') {
                 $data['surat_penerimaan'] = null;
                 $data['divisi_id'] = null;
             } else {
-                $data['divisi_id'] = $request->divisi;
+                if($cekDivisi->kuota > 0) {
+                    $data['divisi_id'] = $request->divisi;
+                    $cekDivisi->decrement('kuota');
+                } else {
+                    return response()->json([
+                        'status' => 'info',
+                        'message' => 'Kuota untuk divisi ini sudah penuh',
+                        'title' => 'Info'
+                    ]);
+                }
             }
 
             if($request->hasFile('surat')) {

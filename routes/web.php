@@ -24,13 +24,15 @@ Route::namespace('Main')->group(function() {
     
     Route::name('dashboard')
         ->controller('DashboardController')
-        ->middleware('auth')
+        ->middleware(['auth', 'CheckActiveMahasiswa'])
         ->group(function() {
             Route::get('/', 'index');
+            Route::get('/dashboard/chart/{kategori}/{jumlah}', 'chart')->name('.chart');
+            Route::get('/dashboard/divisi/{uuid}/', 'divisi')->name('.divisi');
         });
 });
 
-Route::namespace('Main')->middleware('auth')->group(function() {
+Route::namespace('Main')->middleware(['auth','isAdmin'])->group(function() {
     Route::controller('PendaftaranController')
         ->prefix('/pendaftaran')
         ->name('pendaftaran.')
@@ -51,6 +53,15 @@ Route::namespace('Main')->middleware('auth')->group(function() {
             Route::get('/edit/{id}', 'edit')->name('edit');
             Route::post('/store', 'store')->name('store');
             Route::post('/update', 'update')->name('update');
+            Route::get('/validate/{uuid}', 'validateData')->name('validate');
+    });
+
+    Route::controller('MahasiswaController')
+        ->prefix('/mahasiswa')
+        ->name('mahasiswa.')
+        ->group(function() {
+            Route::get('', 'index')->name('index');
+            Route::get('/render/{divisi_uuid}', 'render')->name('render');
             Route::get('/validate/{uuid}', 'validateData')->name('validate');
     });
 });

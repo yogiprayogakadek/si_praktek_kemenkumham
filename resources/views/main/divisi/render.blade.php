@@ -20,6 +20,7 @@
                 <thead>
                     <th>No</th>
                     <th>Nama Divisi</th>
+                    <th>Kuota</th>
                     <th>Keterangan</th>
                     <th>Status</th>
                     @can('Admin')  
@@ -31,6 +32,7 @@
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td>{{$divisi->nama_divisi}}</td>
+                        <td>{{$divisi->kuota}}</td>
                         <td>{{$divisi->keterangan}}</td>
                         <td>{{$divisi->status == true ? 'Aktif' : 'Tidak Aktif'}}</td>
                         @can('Admin')   

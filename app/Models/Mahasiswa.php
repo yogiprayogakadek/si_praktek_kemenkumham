@@ -14,6 +14,7 @@ class Mahasiswa extends Model
 
     public function pendaftaran() 
     {
-        return $this->belongsTo(Pendaftaran::class, 'mahasiswa_id', 'id');
+        return $this->belongsTo(Pendaftaran::class, 'id', 'mahasiswa_id');
+        // return $this->belongsTo(Pendaftaran::class, 'mahasiswa_id', 'id');
     }
 }

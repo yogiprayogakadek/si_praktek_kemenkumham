@@ -43,6 +43,7 @@ class DivisiController extends Controller
             $uuid = $uuid = Hash::make($salt . Uuid::uuid4()->toString() . $salt);
             $data = [
                 'nama_divisi' => $request->nama,
+                'kuota' => $request->kuota,
                 'keterangan' => $request->keterangan,
                 'uuid' => preg_replace('/[\/\\\\]/', '', $uuid)
             ];
@@ -81,6 +82,7 @@ class DivisiController extends Controller
             $divisi = Divisi::where('uuid', $request->uuid)->first();
             $data = [
                 'nama_divisi' => $request->nama,
+                'kuota' => $request->kuota,
                 'keterangan' => $request->keterangan,
             ];
 

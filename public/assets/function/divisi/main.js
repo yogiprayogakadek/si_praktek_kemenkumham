@@ -96,80 +96,6 @@ $(document).ready(function () {
         });
     });
 
-    $('body').on('click', '.btn-edit', function () {
-        let uuid = $(this).data('uuid')
-        $.ajax({
-            type: "get",
-            url: "/divisi/edit/" + uuid,
-            dataType: "json",
-            success: function (response) {
-                $(".render").html(response.data);
-            },
-            error: function (error) {
-                console.log("Error", error);
-            },
-        });
-    });
-
-    // on update button
-    $('body').on('click', '.btn-update', function (e) {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        let form = $('#formEdit')[0]
-        let data = new FormData(form)
-        $.ajax({
-            type: "POST",
-            url: "/divisi/update",
-            data: data,
-            processData: false,
-            contentType: false,
-            cache: false,
-            beforeSend: function () {
-                $('.btn-update').attr('disable', 'disabled')
-                $('.btn-update').html('<i class="fa fa-spin fa-spinner"></i>')
-            },
-            complete: function () {
-                $('.btn-update').removeAttr('disable')
-                $('.btn-update').html('Simpan')
-            },
-            success: function (response) {
-                $('#formEdit').trigger('reset')
-                $(".invalid-feedback").html('')
-                getData();
-                Swal.fire(
-                    response.title,
-                    response.message,
-                    response.status
-                );
-            },
-            error: function (error) {
-                let formName = []
-                let errorName = []
-
-                $.each($('#formEdit').serializeArray(), function (i, field) {
-                    formName.push(field.name.replace(/\[|\]/g, ''))
-                });
-                if (error.status == 422) {
-                    if (error.responseJSON.errors) {
-                        $.each(error.responseJSON.errors, function (key, value) {
-                            errorName.push(key)
-                            if($('.'+key).val() == '') {
-                                $('.' + key).addClass('is-invalid')
-                                $('.error-' + key).html(value)
-                            }
-                        })
-                        $.each(formName, function (i, field) {
-                            $.inArray(field, errorName) == -1 ? $('.'+field).removeClass('is-invalid') : $('.'+field).addClass('is-invalid');
-                        });
-                    }
-                }
-            }
-        });
-    });
-
     // validasi
     $('body').on('click', '.btn-validasi', function() {
         var uuid = $(this).data('uuid');
@@ -185,7 +111,7 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: '/divisi/validate/' + uuid,
+                    url: '/mahasiswa/validate/' + uuid,
                     type: 'GET',
                     success: function (result) {
                         Swal.fire(

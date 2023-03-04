@@ -12,6 +12,7 @@
         type="image/x-icon" />
     <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}"
         type="image/png" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 
 <body>
@@ -66,6 +67,21 @@
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            @if (session('error'))
+                toastr.options =
+                    {
+                        "closeButton" : true,
+                        "progressBar" : true
+                    }
+                toastr.error("{{ session('error') }}");
+            @endif
+        });
+    </script>
 </body>
 
 </html>

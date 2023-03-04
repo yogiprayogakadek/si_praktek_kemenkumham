@@ -26,6 +26,7 @@ class DivisiRequest extends FormRequest
         $rules = [
             'nama' => 'required',
             'keterangan' => 'required',
+            'kuota' => 'required|numeric',
         ];
 
         return $rules;
@@ -35,6 +36,7 @@ class DivisiRequest extends FormRequest
     {
         return [
             'required' => ':attribute harus diisi',
+            'numeric' => ':attribute hanya berupa angka'
         ];
     }
 
@@ -42,7 +44,8 @@ class DivisiRequest extends FormRequest
     {
         return [
             'nama' => 'Nama divisi',
-            'keterangan' => 'Keterangan'
+            'keterangan' => 'Keterangan',
+            'kuota' => 'Kuota',
         ];
     }
 }

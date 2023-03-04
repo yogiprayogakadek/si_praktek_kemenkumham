@@ -25,7 +25,7 @@ return new class extends Migration
             $table->char('telp', 16);
             $table->string('asal_sekolah', 50);
             // $table->string('foto', 50);
-            $table->boolean('is_active')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
