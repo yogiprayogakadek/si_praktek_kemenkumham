@@ -230,6 +230,9 @@
                     $('#modalDetail').modal('hide')
                     getData();
                 }
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
                 Swal.fire(
                     response.title,
                     response.message,
@@ -406,8 +409,8 @@
             // $('.status-save').remove();
             updateData(data)
         } else {
-            if($('body').find('.label-needed').length == 0) {
-                if(surat == '') {
+            if($('body').find('.label-needed').text() == '') {
+                if($('.surat').val() == '') {
                     $('.surat').addClass('is-invalid');
                     $('.error-surat').text('File surat harus diisi')
                 } else {

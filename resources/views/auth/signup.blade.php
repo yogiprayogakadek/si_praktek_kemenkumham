@@ -12,7 +12,15 @@
         type="image/x-icon" />
     <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}"
         type="image/png" />
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
+    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" /> --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" rel="stylesheet">
+    <style>
+        .chosen-container-single .chosen-single {
+            height: 39px;
+        }
+    </style>
 </head>
 
 <body>
@@ -72,7 +80,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Asal Sekolah</label>
-                                    <input type="text" class="form-control" name="asal_sekolah" id="asalSekolah" placeholder="asal sekolah"> 
+                                    {{-- <input type="text" class="form-control" name="asal_sekolah" id="asalSekolah" placeholder="asal sekolah">  --}}
+                                    <select name="asal_sekolah" id="asal_sekolah" class="form-control chosen-select">
+                                        @foreach (scrappingUniversitas() as $universitas)
+                                            <option value="{{$universitas[2]}}">{{$universitas[2]}}</option>
+                                        @endforeach
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -124,12 +138,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.2.1/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+
 
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     {!! JsValidator::formRequest('App\Http\Requests\SignupRequest', '#formRegister'); !!}
 
     <script>
         $(document).ready(function () {
+            $(".chosen-select").chosen();
+            // $('.select2-show-search').select2({
+            //     minimumResultsForSearch: '',
+            //     width: '100%'
+            // });
             @if (session('status') == 'success')
                 toastr.options =
                 {

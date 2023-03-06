@@ -4,14 +4,21 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Divisi;
-use App\Models\Pendaftaran;
-use Illuminate\Http\Request;
+use App\Models\Universitas;
 use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Http;
 use Sunra\PhpSimple\HtmlDomParser;
 use \DOMDocument;
 use \DOMXPath;
 use Symfony\Component\DomCrawler\Crawler;
+
+use Goutte\Client;
+use App\Models\Pendaftaran;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 class DashboardController extends Controller
 {
     public function index()

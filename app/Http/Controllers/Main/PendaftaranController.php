@@ -31,9 +31,10 @@ class PendaftaranController extends Controller
         $pendaftaran = Pendaftaran::where('uuid',$uuid)->with('mahasiswa')->first();
         // $divisi = Divisi::where('status', true)->pluck('nama_divisi', 'id')->prepend('Pilih divisi penempatan...', '');
 
-        $divisi = Divisi::all(['id', 'nama_divisi'])->prepend(['id' => '', 'nama_divisi' => 'Pilih divisi penempatan...'])->toArray();
-        array_unshift($divisi, $divisi[0]);
-        unset($divisi[1]);
+        // $divisi = Divisi::all(['id', 'nama_divisi'])->prepend(['id' => '', 'nama_divisi' => 'Pilih divisi penempatan...'])->toArray();
+        // array_unshift($divisi, $divisi[0]);
+        // unset($divisi[1]);
+        $divisi = Divisi::all(['id', 'nama_divisi'])->toArray();
 
         return response()->json([
             'pendaftaran' => $pendaftaran,
